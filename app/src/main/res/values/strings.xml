@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Pusheen Cat Simulator</string>
+    <string name="to_pet_a_cat">to pet a cat</string>
+    <string name="loading_without_dots">loading</string>
+    <string name="dot">.</string>
+</resources>

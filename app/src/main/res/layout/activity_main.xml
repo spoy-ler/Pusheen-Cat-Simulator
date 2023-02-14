@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/background_main">
+
+    <ImageView
+        android:id="@+id/non_active_img"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.7"
+        android:src="@drawable/cat_non_active" />
+
+    <ImageView
+        android:id="@+id/on_click_play_first"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7"
+        android:visibility="invisible"
+        android:src="@drawable/cat_to_pet" />
+
+    <ImageView
+        android:id="@+id/cat_sleep_active"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7"
+        android:visibility="invisible"
+        android:src="@drawable/cat_sleep_active" />
+
+    <ImageView
+        android:id="@+id/to_bathroom_button"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/to_kitchen_button"
+        app:layout_constraintVertical_bias="0.95"
+        android:src="@drawable/button_bathe"
+        />
+
+    <ImageView
+        android:id="@+id/to_kitchen_button"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toEndOf="@id/to_bathroom_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/play_button"
+        app:layout_constraintVertical_bias="0.95"
+        android:src="@drawable/button_feed"
+        />
+
+    <ImageView
+        android:id="@+id/play_button"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toEndOf="@id/to_kitchen_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sleep_button"
+        app:layout_constraintVertical_bias="0.95"
+        android:src="@drawable/button_play"
+        />
+
+    <ImageView
+        android:id="@+id/sleep_button"
+        android:layout_width="90dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toEndOf="@id/play_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.95"
+        android:src="@drawable/button_sleep"
+        />
+
+
+
+<!--    <Button-->
+<!--        android:id="@+id/to_pet_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="#DD4B2A0A"-->
+<!--        android:text="@string/to_pet_a_cat"-->
+<!--        android:textColor="#B3A89C"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/non_active_img"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+
+
+
+</android.support.constraint.ConstraintLayout>
+
