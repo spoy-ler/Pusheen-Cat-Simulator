@@ -22,8 +22,10 @@ class SplashScreen : AppCompatActivity() {
         setContentView(binding.root)
         Thread{
             Thread.sleep(4100L)
+            (applicationContext as App).isCreatingActivity = true
             val intent = Intent(this@SplashScreen, MainActivity::class.java)
             startActivity(intent)
+            (applicationContext as App).isCreatingActivity = false
         }.start()
         var count = 0
 
@@ -57,4 +59,22 @@ class SplashScreen : AppCompatActivity() {
         }
         Timer.start()
     }
+
+    override fun  onPause() {
+
+        super.onPause()
+
+        if (!(applicationContext as App).isCreatingActivity)
+            (applicationContext as App).stop1()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
+            (applicationContext as App).start1()
+        (applicationContext as App).isCreatingActivity = false
+    }
+
+
 }

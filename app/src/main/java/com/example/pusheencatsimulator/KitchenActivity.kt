@@ -21,12 +21,14 @@ class KitchenActivity : AppCompatActivity() {
     private lateinit var binding: ActivityKitchenBinding
     private val maskDragMessage = ""
     private lateinit var catFeed: MediaPlayer
+    var volumeValue = 0.7F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityKitchenBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         catFeed = MediaPlayer.create(this, R.raw.cat_feed)
+        catFeed.setVolume(volumeValue,volumeValue)
         animgif()
         val imageView: ImageView = findViewById(R.id.drag_bowl)
         Glide.with(this)
@@ -38,6 +40,12 @@ class KitchenActivity : AppCompatActivity() {
         attachViewDragListener()
         binding.dragBowl.setOnDragListener(maskDragListener)
 
+    }
+
+    override fun onBackPressed(){
+
+        (applicationContext as App).isCreatingActivity = true
+        super.onBackPressed()
     }
 
     fun animgif() {
@@ -135,6 +143,23 @@ class KitchenActivity : AppCompatActivity() {
             true
         }
     }
+
+    override fun  onPause() {
+
+        super.onPause()
+
+        if (!(applicationContext as App).isCreatingActivity)
+            (applicationContext as App).stop1()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
+            (applicationContext as App).start1()
+        (applicationContext as App).isCreatingActivity = false
+    }
+
 }
 
 private class MaskDragShadowBuilderBowl(view: View) : View.DragShadowBuilder(view) {

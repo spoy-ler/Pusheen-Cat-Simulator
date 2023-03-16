@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var catSleep: MediaPlayer
     private lateinit var catPlay: MediaPlayer
     private lateinit var Timer: CountDownTimer
+    var volumeValueSleep = 1.0F
+    var volumeValuePlay = 0.4F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         catSleep = MediaPlayer.create(this, R.raw.cat_sleep_2)
+        catSleep.setVolume(volumeValueSleep,volumeValueSleep)
         catPlay = MediaPlayer.create(this, R.raw.urring_cat)
+        catPlay.setVolume(volumeValuePlay,volumeValuePlay)
         binding.nonActiveImg.setImageResource(R.drawable.cat_non_active)
         animgif()
         
@@ -61,16 +65,34 @@ class MainActivity : AppCompatActivity() {
         binding.toBathroomButton.setOnClickListener {
 
             stopSound()
-                val intent = Intent(this@MainActivity, BathroomActivity::class.java)
-                startActivity(intent)
-            }
+            (applicationContext as App).isCreatingActivity = true
+            val intent = Intent(this@MainActivity, BathroomActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.toKitchenButton.setOnClickListener{
             stopSound()
+            (applicationContext as App).isCreatingActivity = true
             val intent = Intent(this@MainActivity, KitchenActivity::class.java)
             startActivity(intent)
         }
 
+    }
+
+    override fun  onPause() {
+
+        super.onPause()
+
+        if (!(applicationContext as App).isCreatingActivity)
+            (applicationContext as App).stop1()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
+            (applicationContext as App).start1()
+        (applicationContext as App).isCreatingActivity = false
     }
 
     fun animgif() {

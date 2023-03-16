@@ -40,6 +40,12 @@ class BathroomActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed(){
+
+        (applicationContext as App).isCreatingActivity = true
+        super.onBackPressed()
+    }
+
     fun animgif() {
         val imageView: ImageView = findViewById(R.id.cat_non_active_gif)
         Glide.with(this)
@@ -144,6 +150,23 @@ class BathroomActivity : AppCompatActivity() {
             true
         }
     }
+
+    override fun  onPause() {
+
+        super.onPause()
+
+        if (!(applicationContext as App).isCreatingActivity)
+            (applicationContext as App).stop1()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
+            (applicationContext as App).start1()
+        (applicationContext as App).isCreatingActivity = false
+    }
+
 }
 
 private class MaskDragShadowBuilder(view: View) : View.DragShadowBuilder(view) {
@@ -161,4 +184,5 @@ private class MaskDragShadowBuilder(view: View) : View.DragShadowBuilder(view) {
     override fun onDrawShadow(canvas: Canvas) {
         shadow?.draw(canvas)
     }
+
 }
