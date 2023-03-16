@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityMainBinding
 import com.example.pusheencatsimulator.databinding.ActivitySplashScreenBinding
 
@@ -24,6 +26,13 @@ class SplashScreen : AppCompatActivity() {
             startActivity(intent)
         }.start()
         var count = 0
+
+
+        val imageView: ImageView = findViewById(R.id.loading_img)
+        Glide.with(this)
+            .load(R.drawable.loading_img)
+            .into(imageView)
+
 
         Timer = object : CountDownTimer(550, 10) {
             override fun onTick(millisUntilFinished: Long) {
