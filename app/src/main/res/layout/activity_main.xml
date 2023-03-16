@@ -90,22 +90,5 @@
         android:src="@drawable/button_sleep"
         />
 
-
-
-<!--    <Button-->
-<!--        android:id="@+id/to_pet_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="#DD4B2A0A"-->
-<!--        android:text="@string/to_pet_a_cat"-->
-<!--        android:textColor="#B3A89C"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/non_active_img"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent" />-->
-
-
-
-
 </android.support.constraint.ConstraintLayout>
 

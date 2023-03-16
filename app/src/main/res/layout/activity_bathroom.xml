@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.90"
-        android:src="@drawable/cat_non_active_img"
+        android:src="@drawable/cat_non_active"
         android:visibility="invisible"
         />
 
