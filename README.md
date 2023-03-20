@@ -9,7 +9,7 @@ Pusheen Cat Simulator is a Android mobile application of interactive virtual pet
 
 ## Download app
 
-[Download APK file](https://github.com/app/build/outputs/apk/debug/app-debug.apk)
+[Download APK file](https://github.com/spoy-ler/Pusheen-Cat-Simulator/blob/main/app/build/outputs/apk/debug/app-debug.apk)
 
 ## Screenshots
 
