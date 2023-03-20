@@ -25,7 +25,6 @@ class SplashScreen : AppCompatActivity() {
             (applicationContext as App).isCreatingActivity = true
             val intent = Intent(this@SplashScreen, MainActivity::class.java)
             startActivity(intent)
-            (applicationContext as App).isCreatingActivity = false
         }.start()
         var count = 0
 
@@ -53,7 +52,6 @@ class SplashScreen : AppCompatActivity() {
                     count = 0
                 }
                 count++
-
                 Timer.start()
             }
         }
@@ -63,7 +61,6 @@ class SplashScreen : AppCompatActivity() {
     override fun  onPause() {
 
         super.onPause()
-
         if (!(applicationContext as App).isCreatingActivity)
             (applicationContext as App).stop1()
 
@@ -75,6 +72,5 @@ class SplashScreen : AppCompatActivity() {
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
     }
-
 
 }
