@@ -24,6 +24,8 @@ class BathroomActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBathroomBinding
     private val maskDragMessage = ""
     private lateinit var catShower: MediaPlayer
+    private lateinit var Timer: CountDownTimer
+    var Tick: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityBathroomBinding.inflate(layoutInflater)
@@ -47,21 +49,36 @@ class BathroomActivity : AppCompatActivity() {
     }
 
     fun animgif() {
-        val imageView: ImageView = findViewById(R.id.cat_non_active_gif)
+        val cat: ImageView = findViewById(R.id.cat_non_active_gif)
         Glide.with(this)
             .load(R.drawable.cat_non_active)
-            .into(imageView)
+            .into(cat)
     }
 
     fun ImageOnClick()
     {
+        if(Tick)
+            Timer.cancel()
         catShower.start()
         binding.catInBathroomGif.setVisibility(View.VISIBLE)
+        binding.bubblesLeft.alpha = 1F
+        binding.bubblesRight.alpha = 1F
+        binding.bubblesLeft.setVisibility(View.VISIBLE)
+        binding.bubblesRight.setVisibility(View.VISIBLE)
         val imageView: ImageView = findViewById(R.id.cat_in_bathroom_gif)
         Glide.with(this)
             .load(R.drawable.cat_in_bathroom_active)
             .into(imageView)
+        val bubblesLeft: ImageView = findViewById(R.id.bubbles_left)
+        Glide.with(this)
+            .load(R.drawable.bubbles)
+            .into(bubblesLeft)
+        val bubblesRight: ImageView = findViewById(R.id.bubbles_right)
+        Glide.with(this)
+            .load(R.drawable.bubbles)
+            .into(bubblesRight)
         binding.catNonActiveGif.visibility = View.INVISIBLE
+
         binding.catInBathroomNonActive.setVisibility(View.INVISIBLE)
     }
 
@@ -71,6 +88,21 @@ class BathroomActivity : AppCompatActivity() {
             catShower.seekTo(0)
             catShower.pause()
         }
+        var transparency = 1F
+        Timer = object : CountDownTimer(3000, 10) {
+            override fun onTick(millisUntilFinished: Long) {
+                Tick = true
+                transparency = transparency - 0.005F
+                binding.bubblesLeft.alpha = transparency
+                binding.bubblesRight.alpha = transparency
+            }
+            override fun onFinish() {
+                Tick = false
+                binding.bubblesLeft.setVisibility(View.INVISIBLE)
+                binding.bubblesRight.setVisibility(View.INVISIBLE)
+            }
+        }
+        Timer.start()
         binding.catInBathroomGif.setVisibility(View.INVISIBLE)
         binding.catInBathroomNonActive.setVisibility(View.VISIBLE)
         val imageView: ImageView = findViewById(R.id.cat_in_bathroom_non_active)
