@@ -13,8 +13,9 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.DragEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityBathroomBinding
 
@@ -25,17 +26,48 @@ class BathroomActivity : AppCompatActivity() {
     private val maskDragMessage = ""
     private lateinit var catShower: MediaPlayer
     private lateinit var Timer: CountDownTimer
+    private lateinit var TimerGif: CountDownTimer
     var Tick: Boolean = false
+    private lateinit var inAnimation: Animation
+    private lateinit var fromAnimation: Animation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityBathroomBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        inAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_right)
+        fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
         catShower = MediaPlayer.create(this, R.raw.shower)
 
         animgif()
         binding.backToMain.setOnClickListener {
-            onBackPressed()
+
+            if (binding.backToCat.visibility == View.INVISIBLE) {
+                binding.dragSoap.isEnabled = false
+                binding.goToCat.clearAnimation()
+                binding.catNonActiveGif.visibility = View.INVISIBLE
+                binding.goToCat.visibility = View.INVISIBLE
+                TimerGif.cancel()
+                val animGif: ImageView = findViewById(R.id.back_to_cat)
+                Glide.with(this)
+                    .load(R.drawable.back_to_cat)
+                    .into(animGif)
+                binding.catNonActiveGif.visibility = View.INVISIBLE
+                binding.catInBathroomNonActive.visibility = View.INVISIBLE
+                binding.catInBathroomGif.visibility = View.INVISIBLE
+                binding.backToCat.visibility = View.VISIBLE
+                binding.backToCat.startAnimation(inAnimation)
+                TimerGif = object : CountDownTimer(2000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {}
+                    override fun onFinish() {
+                        binding.backToCat.visibility = View.INVISIBLE
+                        binding.dragSoap.isEnabled = true
+                        onBackPressed()
+                    }
+                }
+                TimerGif.start()
+            }
+
         }
         attachViewDragListener()
         binding.dragSoap.setOnDragListener(maskDragListener)
@@ -197,6 +229,25 @@ class BathroomActivity : AppCompatActivity() {
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
+        binding.dragSoap.isEnabled = false
+        val animGif: ImageView = findViewById(R.id.go_to_cat)
+        Glide.with(this)
+            .load(R.drawable.go_to_cat)
+            .into(animGif)
+        binding.catNonActiveGif.visibility = View.INVISIBLE
+        binding.catInBathroomNonActive.visibility = View.INVISIBLE
+        binding.catInBathroomGif.visibility = View.INVISIBLE
+        binding.goToCat.visibility = View.VISIBLE
+        binding.goToCat.startAnimation(fromAnimation)
+        TimerGif = object : CountDownTimer(2300, 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                binding.goToCat.visibility = View.INVISIBLE
+                binding.catNonActiveGif.visibility = View.VISIBLE
+                binding.dragSoap.isEnabled = true
+            }
+        }
+        TimerGif.start()
     }
 
 }

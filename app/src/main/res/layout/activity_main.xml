@@ -19,6 +19,34 @@
         android:src="@drawable/cat_non_active" />
 
     <ImageView
+        android:id="@+id/go_to_cat"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintHorizontal_bias="2"
+        android:visibility="invisible"
+        android:src="@drawable/go_to_cat"
+        />
+
+    <ImageView
+        android:id="@+id/back_to_cat"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintHorizontal_bias="0.45"
+        android:visibility="invisible"
+        android:src="@drawable/back_to_cat"
+        />
+
+    <ImageView
         android:id="@+id/on_click_play_first"
         android:layout_width="300dp"
         android:layout_height="300dp"

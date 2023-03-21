@@ -8,10 +8,13 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.view.DragEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityKitchenBinding
@@ -22,11 +25,16 @@ class KitchenActivity : AppCompatActivity() {
     private val maskDragMessage = ""
     private lateinit var catFeed: MediaPlayer
     var volumeValue = 0.7F
+    private lateinit var inAnimation: Animation
+    private lateinit var fromAnimation: Animation
+    private lateinit var TimerGif: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityKitchenBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        inAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_right)
+        fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
         catFeed = MediaPlayer.create(this, R.raw.cat_feed)
         catFeed.setVolume(volumeValue,volumeValue)
         animgif()
@@ -35,7 +43,31 @@ class KitchenActivity : AppCompatActivity() {
             .load(R.drawable.bowl)
             .into(imageView)
         binding.backToMain.setOnClickListener {
-            onBackPressed()
+            if (binding.backToCat.visibility == View.INVISIBLE) {
+                binding.dragBowl.isEnabled = false
+                binding.goToCat.clearAnimation()
+                binding.goToCat.visibility = View.INVISIBLE
+                TimerGif.cancel()
+                val animGif: ImageView = findViewById(R.id.back_to_cat)
+                Glide.with(this)
+                    .load(R.drawable.back_to_cat)
+                    .into(animGif)
+                binding.catNonActiveGif.visibility = View.INVISIBLE
+                binding.catInKitchenGif.visibility = View.INVISIBLE
+
+                binding.backToCat.visibility = View.VISIBLE
+                binding.backToCat.startAnimation(inAnimation)
+                TimerGif = object : CountDownTimer(2000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {}
+                    override fun onFinish() {
+                        binding.backToCat.visibility = View.INVISIBLE
+                        binding.dragBowl.isEnabled = true
+                        onBackPressed()
+                    }
+                }
+                TimerGif.start()
+            }
+
         }
         attachViewDragListener()
         binding.dragBowl.setOnDragListener(maskDragListener)
@@ -158,14 +190,31 @@ class KitchenActivity : AppCompatActivity() {
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
+        binding.dragBowl.isEnabled = false
+        val animGif: ImageView = findViewById(R.id.go_to_cat)
+        Glide.with(this)
+            .load(R.drawable.go_to_cat)
+            .into(animGif)
+        binding.catNonActiveGif.visibility = View.INVISIBLE
+        binding.catInKitchenGif.visibility = View.INVISIBLE
+        binding.goToCat.visibility = View.VISIBLE
+        binding.goToCat.startAnimation(fromAnimation)
+        TimerGif = object : CountDownTimer(2300, 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                binding.goToCat.visibility = View.INVISIBLE
+                binding.catNonActiveGif.visibility = View.VISIBLE
+                binding.dragBowl.isEnabled = true
+            }
+        }
+        TimerGif.start()
     }
 
 }
 
 private class MaskDragShadowBuilderBowl(view: View) : View.DragShadowBuilder(view) {
 
-    private val shadow =
-        ResourcesCompat.getDrawable(view.context.resources, R.drawable.bowl, view.context.theme)
+    private val shadow = ResourcesCompat.getDrawable(view.context.resources, R.drawable.bowl, view.context.theme)
 
     override fun onProvideShadowMetrics(size: Point, touch: Point) {
         val width: Int = view.width
