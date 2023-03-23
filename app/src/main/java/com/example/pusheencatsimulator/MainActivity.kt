@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -118,7 +119,14 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         if (!(applicationContext as App).isCreatingActivity)
             (applicationContext as App).stop1()
+        TimerGif.cancel()
+        binding.goToCat.clearAnimation()
+        binding.goToCat.visibility = View.INVISIBLE
+        binding.backToCat.clearAnimation()
+        binding.backToCat.visibility = View.INVISIBLE
     }
+
+
 
     override fun onResume() {
         super.onResume()

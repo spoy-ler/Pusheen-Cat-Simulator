@@ -16,6 +16,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityBathroomBinding
 
@@ -221,6 +222,11 @@ class BathroomActivity : AppCompatActivity() {
 
         if (!(applicationContext as App).isCreatingActivity)
             (applicationContext as App).stop1()
+        TimerGif.cancel()
+        binding.goToCat.clearAnimation()
+        binding.goToCat.visibility = View.INVISIBLE
+        binding.backToCat.clearAnimation()
+        binding.backToCat.visibility = View.INVISIBLE
 
     }
 

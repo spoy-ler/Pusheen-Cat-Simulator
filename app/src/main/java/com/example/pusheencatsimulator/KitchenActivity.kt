@@ -182,6 +182,11 @@ class KitchenActivity : AppCompatActivity() {
 
         if (!(applicationContext as App).isCreatingActivity)
             (applicationContext as App).stop1()
+        TimerGif.cancel()
+        binding.goToCat.clearAnimation()
+        binding.goToCat.visibility = View.INVISIBLE
+        binding.backToCat.clearAnimation()
+        binding.backToCat.visibility = View.INVISIBLE
 
     }
 
@@ -191,6 +196,7 @@ class KitchenActivity : AppCompatActivity() {
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
         binding.dragBowl.isEnabled = false
+            //TimerGif.cancel()
         val animGif: ImageView = findViewById(R.id.go_to_cat)
         Glide.with(this)
             .load(R.drawable.go_to_cat)
@@ -199,8 +205,13 @@ class KitchenActivity : AppCompatActivity() {
         binding.catInKitchenGif.visibility = View.INVISIBLE
         binding.goToCat.visibility = View.VISIBLE
         binding.goToCat.startAnimation(fromAnimation)
-        TimerGif = object : CountDownTimer(2300, 1000) {
-            override fun onTick(millisUntilFinished: Long) {}
+        TimerGif = object : CountDownTimer(2300, 2500) {
+            override fun onTick(millisUntilFinished: Long) {
+                if(binding.catNonActiveGif.visibility == View.VISIBLE) {
+//                    binding.goToCat.clearAnimation()
+//                    binding.goToCat.visibility = View.INVISIBLE
+                }
+            }
             override fun onFinish() {
                 binding.goToCat.visibility = View.INVISIBLE
                 binding.catNonActiveGif.visibility = View.VISIBLE
