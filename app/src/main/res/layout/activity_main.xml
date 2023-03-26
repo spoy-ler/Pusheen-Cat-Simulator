@@ -8,6 +8,57 @@
     android:background="@drawable/background_main">
 
     <ImageView
+        android:id="@+id/bar"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.55"
+        android:src="@drawable/bar" />
+
+    <ImageView
+        android:id="@+id/happy_cat_bar"
+        android:layout_width="100dp"
+        android:layout_height="105dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.12"
+        android:visibility="invisible"
+        android:src="@drawable/happy_cat_bar" />
+
+    <ImageView
+        android:id="@+id/normal_cat_bar"
+        android:layout_width="100dp"
+        android:layout_height="105dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.12"
+        android:visibility="visible"
+        android:src="@drawable/normal_cat_bar" />
+
+    <ImageView
+        android:id="@+id/sad_cat_bar"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:src="@drawable/sad_cat_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintVertical_bias="0.03" />
+
+    <ImageView
         android:id="@+id/non_active_img"
         android:layout_width="300dp"
         android:layout_height="300dp"
