@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,73 @@
     tools:context=".BathroomActivity"
     android:background="@drawable/background_bathroom"
     >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bar"
+        android:layout_width="250dp"
+        android:layout_height="42dp"
+        android:background="@drawable/bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintHorizontal_bias="0.73">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_view"
+            android:layout_width="210dp"
+            android:layout_height="23dp"
+
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintHorizontal_bias="1"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageView
+        android:id="@+id/happy_cat_bar"
+        android:layout_width="100dp"
+        android:layout_height="105dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.12"
+        android:visibility="invisible"
+        android:src="@drawable/happy_cat_bar" />
+
+    <ImageView
+        android:id="@+id/normal_cat_bar"
+        android:layout_width="100dp"
+        android:layout_height="105dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.12"
+        android:visibility="visible"
+        android:src="@drawable/normal_cat_bar" />
+
+    <ImageView
+        android:id="@+id/sad_cat_bar"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:src="@drawable/sad_cat_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintVertical_bias="0.03" />
 
     <ImageView
         android:id="@+id/bubbles_left"
@@ -144,4 +211,4 @@
         />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

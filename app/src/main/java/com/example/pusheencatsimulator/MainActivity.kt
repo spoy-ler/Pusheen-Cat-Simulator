@@ -2,15 +2,15 @@ package com.example.pusheencatsimulator
 
 import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pusheencatsimulator.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
 
@@ -21,8 +21,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var catPlay: MediaPlayer
     private lateinit var TimerGif: CountDownTimer
     private lateinit var Timer: CountDownTimer
+    private lateinit var TimerBar: CountDownTimer
+
     private lateinit var inAnimation: Animation
     private lateinit var fromAnimation: Animation
+    private lateinit var adapter: AdapterBar
     var volumeValueSleep = 1.0F
     var volumeValuePlay = 0.4F
     var toBathroom: Boolean = false
@@ -35,12 +38,39 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         inAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_right)
         fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
+
+        Log.d("path123", this.getExternalFilesDir(null)!!.absolutePath)
+
+//        adapter = AdapterBar(0)
+//        val layoutManager = GridLayoutManager(this, 12)
+//        binding.listView.layoutManager = layoutManager
+//        binding.listView.adapter = adapter
+//        object : CountDownTimer(12000, 1000) {
+//            override fun onTick(millisUntilFinished: Long) {
+//                adapter = AdapterBar((millisUntilFinished/1000).toInt())
+//                val layoutManager = GridLayoutManager(this@MainActivity, 12)
+//                binding.listView.layoutManager = layoutManager
+//                binding.listView.adapter = adapter
+//
+//            }
+//            override fun onFinish() {
+//
+//            }
+//        }.start()
+
+//        adapter = AdapterBar(8)
+//        val layoutManager = GridLayoutManager(this, 12)
+//        binding.listView.layoutManager = layoutManager
+//        binding.listView.adapter = adapter
+
+
         Timer = object : CountDownTimer(3500, 1000) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 binding.onClickPlayFirst.setVisibility(View.INVISIBLE)
                 binding.catSleepActive.setVisibility(View.INVISIBLE)
                 binding.nonActiveImg.setVisibility(View.VISIBLE)
+                higherNeedsLevel()
             }
         }
         catSleep = MediaPlayer.create(this, R.raw.cat_sleep_2)
@@ -52,6 +82,8 @@ class MainActivity : AppCompatActivity() {
         
         binding.playButton.setOnClickListener(View.OnClickListener {
 
+            higherNeedsLevel()
+            //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
             binding.nonActiveImg.visibility = View.INVISIBLE
@@ -73,6 +105,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.sleepButton.setOnClickListener(View.OnClickListener {
 
+            higherNeedsLevel()
+            //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
             binding.nonActiveImg.visibility = View.INVISIBLE
@@ -112,7 +146,59 @@ class MainActivity : AppCompatActivity() {
             if (binding.backToCat.visibility == View.INVISIBLE)
                 backToCat()
         }
+
+        /////////////////////////
+
+        updateLevel()
+        (applicationContext as App).needs = (object : LEVELNEEDS {
+            override fun needsinterface() {
+                updateLevel()
+            }
+        })
+
+//        binding.normalCatBar.setOnClickListener{
+//            (applicationContext as App).levelValue = 9
+//        }
+        /////////////////////////
     }
+
+    /////////////////////////////
+
+    fun updateLevel(){
+        adapter = AdapterBar((applicationContext as App).levelValue)
+        val layoutManager = GridLayoutManager(this, 12)
+        binding.listView.layoutManager = layoutManager
+        binding.listView.adapter = adapter
+    }
+
+    fun higherNeedsLevel(){
+        var number = 0
+        TimerBar = object : CountDownTimer(1500, 500) {
+            override fun onTick(millisUntilFinished: Long) {
+                if ((applicationContext as App).levelValue < 12) {
+                    if ((applicationContext as App).levelValue > 10 && number != 3)
+                    {
+                        (applicationContext as App).levelValue = 12
+                        number++
+                    }
+                    else if(number != 3) {
+                        (applicationContext as App).levelValue = (applicationContext as App).levelValue + 1
+                        number++
+
+                    }
+                }
+                updateLevel()
+            }
+            override fun onFinish() {
+//                if (binding.nonActiveImg.visibility == View.VISIBLE)
+//                TimerBar.start()
+            }
+        }.start()
+//        if (binding.nonActiveImg.visibility == View.VISIBLE)
+//            TimerBar.cancel()
+    }
+
+    ////////////////////////////
 
     override fun  onPause() {
 
@@ -124,12 +210,14 @@ class MainActivity : AppCompatActivity() {
         binding.goToCat.visibility = View.INVISIBLE
         binding.backToCat.clearAnimation()
         binding.backToCat.visibility = View.INVISIBLE
+        //(applicationContext as App).writeFile()
     }
 
 
 
     override fun onResume() {
         super.onResume()
+        updateLevel()
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
@@ -211,6 +299,13 @@ class MainActivity : AppCompatActivity() {
         binding.nonActiveImg.setVisibility(View.VISIBLE)
         binding.catSleepActive.setVisibility(View.INVISIBLE)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //(applicationContext as App).stopSevice()
+    }
+
+
 
     override fun onBackPressed() = Unit
 }

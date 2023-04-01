@@ -3,6 +3,7 @@ package com.example.pusheencatsimulator
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.CountDownTimer
 import android.os.IBinder
 
 class ServiceBackgroundMusic : Service() {
@@ -23,6 +24,17 @@ class ServiceBackgroundMusic : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         backgroundMusic.start()
         backgroundMusic.setVolume(volumeValue,volumeValue)
+
+
+//        object : CountDownTimer(10000, 1000) {
+//            override fun onTick(millisUntilFinished: Long) {
+//
+//            }
+//            override fun onFinish() {
+//                test()
+//            }
+//        }.start()
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -35,4 +47,7 @@ class ServiceBackgroundMusic : Service() {
     }
 
 
+//    fun test() {
+//        (applicationContext as App).test.testinterface()
+//    }
 }

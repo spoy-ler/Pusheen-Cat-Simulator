@@ -8,14 +8,18 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
+//import android.support.constraint.ConstraintLayout
+//import android.support.v4.content.res.ResourcesCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.GridLayoutManager
 //import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityBathroomBinding
@@ -28,9 +32,13 @@ class BathroomActivity : AppCompatActivity() {
     private lateinit var catShower: MediaPlayer
     private lateinit var Timer: CountDownTimer
     private lateinit var TimerGif: CountDownTimer
+    private lateinit var TimerBar: CountDownTimer
     var Tick: Boolean = false
     private lateinit var inAnimation: Animation
     private lateinit var fromAnimation: Animation
+
+
+    private lateinit var adapter: AdapterBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityBathroomBinding.inflate(layoutInflater)
@@ -39,6 +47,13 @@ class BathroomActivity : AppCompatActivity() {
         inAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_right)
         fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
         catShower = MediaPlayer.create(this, R.raw.shower)
+
+        updateLevel()
+        (applicationContext as App).needs = (object : LEVELNEEDS {
+            override fun needsinterface() {
+                updateLevel()
+            }
+        })
 
         animgif()
         binding.backToMain.setOnClickListener {
@@ -72,7 +87,52 @@ class BathroomActivity : AppCompatActivity() {
         }
         attachViewDragListener()
         binding.dragSoap.setOnDragListener(maskDragListener)
+//        binding.dragSoap.setOnDragListener { view, motionEvent ->
+//            when (motionEvent.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    higherNeedsLevel()
+//                    true
+//                }
+//                MotionEvent.ACTION_UP -> {
+//                    TimerBar?.cancel()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
+    }
+
+    fun updateLevel(){
+        adapter = AdapterBar((applicationContext as App).levelValue)
+        val layoutManager = GridLayoutManager(this, 12)
+        binding.listView.layoutManager = layoutManager
+        binding.listView.adapter = adapter
+    }
+
+    fun higherNeedsLevel(){
+            var number = 0
+            TimerBar = object : CountDownTimer(2000, 1500) {
+                override fun onTick(millisUntilFinished: Long) {
+                    if ((applicationContext as App).levelValue < 12) {
+                        if ((applicationContext as App).levelValue > 10 && number != 3)
+                        {
+                            (applicationContext as App).levelValue = 12
+                            number++
+                        }
+                        else if(number != 3) {
+                            (applicationContext as App).levelValue = (applicationContext as App).levelValue + 1
+                            number++
+
+                        }
+                    }
+                    updateLevel()
+                }
+                override fun onFinish() {
+                    TimerBar.start()
+                }
+            }.start()
+            if (!(binding.dragSoap.isPressed)) TimerBar.cancel()
     }
 
     override fun onBackPressed(){
@@ -121,6 +181,7 @@ class BathroomActivity : AppCompatActivity() {
             catShower.seekTo(0)
             catShower.pause()
         }
+
         var transparency = 1F
         Timer = object : CountDownTimer(3000, 10) {
             override fun onTick(millisUntilFinished: Long) {
@@ -154,35 +215,18 @@ class BathroomActivity : AppCompatActivity() {
                 ImageOnClick()
                 true
             }
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                binding.catNonActive.alpha = 0.3f
-                true
-            }
-            DragEvent.ACTION_DRAG_LOCATION -> {
-                true
-            }
+//            DragEvent.ACTION_DRAG_ENTERED -> {
+//                //binding.catNonActive.alpha = 0.3f
+//                true
+//            }
             DragEvent.ACTION_DRAG_EXITED -> {
-                binding.catNonActive.alpha = 1.0f
+                //binding.catNonActive.alpha = 1.0f
                 draggableItem.visibility = View.VISIBLE
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                binding.catNonActive.alpha = 1.0f
-                if (dragEvent.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                    val draggedData = dragEvent.clipData.getItemAt(0).text
-                    println("draggedData $draggedData")
-                }
-                val parent = draggableItem.parent as ConstraintLayout
-                parent.removeView(draggableItem)
-                val dropArea = view as ConstraintLayout
-                dropArea.addView(draggableItem)
                 true
             }
             DragEvent.ACTION_DRAG_ENDED -> {
                 ResetImage()
                 draggableItem.visibility = View.VISIBLE
-                view.invalidate()
                 true
             }
             else -> {
@@ -191,13 +235,15 @@ class BathroomActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun attachViewDragListener() {
 
         //binding.catNonActiveGif.visibility = View.INVISIBLE
         //binding.catNonActive.visibility = View.VISIBLE
 
         binding.dragSoap.setOnLongClickListener { view: View ->
-
+            higherNeedsLevel()
             val item = ClipData.Item(maskDragMessage)
             val dataToDrag = ClipData(
                 maskDragMessage,
@@ -232,6 +278,7 @@ class BathroomActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        updateLevel()
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false

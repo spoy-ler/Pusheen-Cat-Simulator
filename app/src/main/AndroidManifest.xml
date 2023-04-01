@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -14,14 +16,18 @@
         android:theme="@style/Theme.PusheenCatSimulator"
         tools:targetApi="31">
         <service
-            android:name=".ServiceBackgroundMusic"
+            android:name=".ServiceNeedsScale"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name=".ServiceBackgroundMusic"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".SplashScreen"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,24 +40,24 @@
         </activity>
         <activity
             android:name=".KitchenActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".BathroomActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

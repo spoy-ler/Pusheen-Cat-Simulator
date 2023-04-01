@@ -6,16 +6,19 @@ import android.graphics.Canvas
 import android.graphics.Point
 import android.media.MediaPlayer
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.res.ResourcesCompat
+//import android.support.constraint.ConstraintLayout
+//import android.support.v4.content.res.ResourcesCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import android.view.DragEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.pusheencatsimulator.databinding.ActivityKitchenBinding
 
@@ -28,6 +31,9 @@ class KitchenActivity : AppCompatActivity() {
     private lateinit var inAnimation: Animation
     private lateinit var fromAnimation: Animation
     private lateinit var TimerGif: CountDownTimer
+    private lateinit var TimerBar: CountDownTimer
+
+    private lateinit var adapter: AdapterBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityKitchenBinding.inflate(layoutInflater)
@@ -37,6 +43,14 @@ class KitchenActivity : AppCompatActivity() {
         fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
         catFeed = MediaPlayer.create(this, R.raw.cat_feed)
         catFeed.setVolume(volumeValue,volumeValue)
+
+        updateLevel()
+        (applicationContext as App).needs = (object : LEVELNEEDS {
+            override fun needsinterface() {
+                updateLevel()
+            }
+        })
+
         animgif()
         val imageView: ImageView = findViewById(R.id.drag_bowl)
         Glide.with(this)
@@ -72,6 +86,38 @@ class KitchenActivity : AppCompatActivity() {
         attachViewDragListener()
         binding.dragBowl.setOnDragListener(maskDragListener)
 
+    }
+
+    fun updateLevel(){
+        adapter = AdapterBar((applicationContext as App).levelValue)
+        val layoutManager = GridLayoutManager(this, 12)
+        binding.listView.layoutManager = layoutManager
+        binding.listView.adapter = adapter
+    }
+
+    fun higherNeedsLevel(){
+        var number = 0
+        TimerBar = object : CountDownTimer(2000, 1500) {
+            override fun onTick(millisUntilFinished: Long) {
+                if ((applicationContext as App).levelValue < 12) {
+                    if ((applicationContext as App).levelValue > 10 && number != 3)
+                    {
+                        (applicationContext as App).levelValue = 12
+                        number++
+                    }
+                    else if(number != 3) {
+                        (applicationContext as App).levelValue = (applicationContext as App).levelValue + 1
+                        number++
+
+                    }
+                }
+                updateLevel()
+            }
+            override fun onFinish() {
+                TimerBar.start()
+            }
+        }.start()
+        if (!(binding.dragBowl.isPressed)) TimerBar.cancel()
     }
 
     override fun onBackPressed(){
@@ -117,35 +163,18 @@ class KitchenActivity : AppCompatActivity() {
                 ImageOnClick()
                 true
             }
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                binding.catNonActive.alpha = 0.3f
-                true
-            }
-            DragEvent.ACTION_DRAG_LOCATION -> {
-                true
-            }
+//            DragEvent.ACTION_DRAG_ENTERED -> {
+//                binding.catNonActive.alpha = 0.3f
+//                true
+//            }
             DragEvent.ACTION_DRAG_EXITED -> {
-                binding.catNonActive.alpha = 1.0f
+                //binding.catNonActive.alpha = 1.0f
                 draggableItem.visibility = View.VISIBLE
-                view.invalidate()
-                true
-            }
-            DragEvent.ACTION_DROP -> {
-                binding.catNonActive.alpha = 1.0f
-                if (dragEvent.clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                    val draggedData = dragEvent.clipData.getItemAt(0).text
-                    println("draggedData $draggedData")
-                }
-                val parent = draggableItem.parent as ConstraintLayout
-                parent.removeView(draggableItem)
-                val dropArea = view as ConstraintLayout
-                dropArea.addView(draggableItem)
                 true
             }
             DragEvent.ACTION_DRAG_ENDED -> {
                 ResetImage()
                 draggableItem.visibility = View.VISIBLE
-                view.invalidate()
                 true
             }
             else -> {
@@ -157,7 +186,7 @@ class KitchenActivity : AppCompatActivity() {
     private fun attachViewDragListener() {
 
         binding.dragBowl.setOnLongClickListener { view: View ->
-
+            higherNeedsLevel()
             val item = ClipData.Item(maskDragMessage)
             val dataToDrag = ClipData(
                 maskDragMessage,
@@ -191,6 +220,7 @@ class KitchenActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        updateLevel()
         super.onResume()
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
@@ -232,7 +262,7 @@ private class MaskDragShadowBuilderBowl(view: View) : View.DragShadowBuilder(vie
         val height: Int = view.height
         shadow?.setBounds(0, 0, width, height)
         size.set(width, height)
-        touch.set(width / 2, height / 2)
+        //touch.set(width / 2, height / 2)
     }
 
     override fun onDrawShadow(canvas: Canvas) {
