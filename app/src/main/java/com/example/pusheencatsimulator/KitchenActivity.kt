@@ -93,6 +93,22 @@ class KitchenActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 12)
         binding.listView.layoutManager = layoutManager
         binding.listView.adapter = adapter
+
+        if((applicationContext as App).levelValue >= 8) {
+            binding.happyCatBar.visibility = View.VISIBLE
+            binding.normalCatBar.visibility = View.INVISIBLE
+            binding.sadCatBar.visibility = View.INVISIBLE
+        }
+        if((applicationContext as App).levelValue < 8 && (applicationContext as App).levelValue > 3) {
+            binding.happyCatBar.visibility = View.INVISIBLE
+            binding.normalCatBar.visibility = View.VISIBLE
+            binding.sadCatBar.visibility = View.INVISIBLE
+        }
+        if((applicationContext as App).levelValue <= 3) {
+            binding.happyCatBar.visibility = View.INVISIBLE
+            binding.normalCatBar.visibility = View.INVISIBLE
+            binding.sadCatBar.visibility = View.VISIBLE
+        }
     }
 
     fun higherNeedsLevel(){

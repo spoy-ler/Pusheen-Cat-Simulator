@@ -13,12 +13,16 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pusheencatsimulator.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var catSleep: MediaPlayer
-    private lateinit var catPlay: MediaPlayer
+    private lateinit var catPlayFirst: MediaPlayer
+    private lateinit var catPlaySecond: MediaPlayer
+    private lateinit var catPlayThird: MediaPlayer
+
     private lateinit var TimerGif: CountDownTimer
     private lateinit var Timer: CountDownTimer
     private lateinit var TimerBar: CountDownTimer
@@ -26,8 +30,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inAnimation: Animation
     private lateinit var fromAnimation: Animation
     private lateinit var adapter: AdapterBar
-    var volumeValueSleep = 1.0F
+    var volumeValueSleep = 1.4F
     var volumeValuePlay = 0.4F
+    var volumeValuePlayBall = 0.9F
     var toBathroom: Boolean = false
     var toKitchen: Boolean = false
 
@@ -67,45 +72,84 @@ class MainActivity : AppCompatActivity() {
         Timer = object : CountDownTimer(3500, 1000) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
-                binding.onClickPlayFirst.setVisibility(View.INVISIBLE)
-                binding.catSleepActive.setVisibility(View.INVISIBLE)
+                if (binding.onClickPlayFirst.visibility == View.VISIBLE)
+                    binding.onClickPlayFirst.setVisibility(View.INVISIBLE)
+                if (binding.onClickPlaySecond.visibility == View.VISIBLE)
+                    binding.onClickPlaySecond.setVisibility(View.INVISIBLE)
+                if (binding.onClickPlayThird.visibility == View.VISIBLE)
+                    binding.onClickPlayThird.setVisibility(View.INVISIBLE)
+                if (binding.catSleepActive.visibility == View.VISIBLE)
+                    binding.catSleepActive.setVisibility(View.INVISIBLE)
                 binding.nonActiveImg.setVisibility(View.VISIBLE)
-                higherNeedsLevel()
+                binding.playButton.isEnabled = true
+                binding.sleepButton.isEnabled = true
+                //higherNeedsLevel()
             }
         }
         catSleep = MediaPlayer.create(this, R.raw.cat_sleep_2)
         catSleep.setVolume(volumeValueSleep,volumeValueSleep)
-        catPlay = MediaPlayer.create(this, R.raw.urring_cat)
-        catPlay.setVolume(volumeValuePlay,volumeValuePlay)
+        catPlayFirst = MediaPlayer.create(this, R.raw.urring_cat)
+        catPlayFirst.setVolume(volumeValuePlay,volumeValuePlay)
+        catPlaySecond = MediaPlayer.create(this, R.raw.ball)
+        catPlaySecond.setVolume(volumeValuePlayBall,volumeValuePlayBall)
+        catPlayThird = MediaPlayer.create(this, R.raw.skripka)
+        catPlayThird.setVolume(volumeValuePlay,volumeValuePlay)
         binding.nonActiveImg.setImageResource(R.drawable.cat_non_active)
         animgif()
         
         binding.playButton.setOnClickListener(View.OnClickListener {
 
             higherNeedsLevel()
+            binding.sleepButton.isEnabled = false
+            binding.playButton.isEnabled = false
             //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
             binding.nonActiveImg.visibility = View.INVISIBLE
+
+            binding.catSleepActive.setVisibility(View.INVISIBLE)
+            stopSound()
+            val random = Random.nextInt(0, 3)
+
             if (binding.backToCat.visibility == View.INVISIBLE) {
                 TimerGif.cancel()
-                val imageView: ImageView = findViewById(R.id.on_click_play_first)
-                Glide.with(this)
-                    .load(R.drawable.cat_to_pet)
-                    .into(imageView)
-                stopSound()
-                catPlay.start()
-                binding.onClickPlayFirst.setVisibility(View.VISIBLE)
-                //binding.nonActiveImg.setVisibility(View.INVISIBLE)
-                binding.catSleepActive.setVisibility(View.INVISIBLE)
-                Timer.start()
-            }
 
+                if (random == 0) {
+                    val imageView: ImageView = findViewById(R.id.on_click_play_first)
+                    Glide.with(this)
+                        .load(R.drawable.cat_to_pet)
+                        .into(imageView)
+                    binding.onClickPlayFirst.setVisibility(View.VISIBLE)
+                    catPlayFirst.start()
+                }
+                if (random == 1) {
+                    val imageView: ImageView = findViewById(R.id.on_click_play_second)
+                    Glide.with(this)
+                        .load(R.drawable.cat_play_2)
+                        .into(imageView)
+                    binding.onClickPlaySecond.setVisibility(View.VISIBLE)
+                    catPlaySecond.start()
+                }
+                if (random == 2) {
+                    val imageView: ImageView = findViewById(R.id.on_click_play_third)
+                    Glide.with(this)
+                        .load(R.drawable.cat_play_3)
+                        .into(imageView)
+                    binding.onClickPlayThird.setVisibility(View.VISIBLE)
+                    catPlayThird.start()
+                }
+
+
+                Timer.start()
+
+            }
         })
 
         binding.sleepButton.setOnClickListener(View.OnClickListener {
 
             higherNeedsLevel()
+            binding.playButton.isEnabled = false
+            binding.sleepButton.isEnabled = false
             //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
@@ -149,12 +193,7 @@ class MainActivity : AppCompatActivity() {
 
         /////////////////////////
 
-        updateLevel()
-        (applicationContext as App).needs = (object : LEVELNEEDS {
-            override fun needsinterface() {
-                updateLevel()
-            }
-        })
+
 
 //        binding.normalCatBar.setOnClickListener{
 //            (applicationContext as App).levelValue = 9
@@ -169,6 +208,22 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 12)
         binding.listView.layoutManager = layoutManager
         binding.listView.adapter = adapter
+
+        if((applicationContext as App).levelValue >= 8) {
+            binding.happyCatBar.visibility = View.VISIBLE
+            binding.normalCatBar.visibility = View.INVISIBLE
+            binding.sadCatBar.visibility = View.INVISIBLE
+        }
+        if((applicationContext as App).levelValue < 8 && (applicationContext as App).levelValue > 3) {
+            binding.happyCatBar.visibility = View.INVISIBLE
+            binding.normalCatBar.visibility = View.VISIBLE
+            binding.sadCatBar.visibility = View.INVISIBLE
+        }
+        if((applicationContext as App).levelValue <= 3) {
+            binding.happyCatBar.visibility = View.INVISIBLE
+            binding.normalCatBar.visibility = View.INVISIBLE
+            binding.sadCatBar.visibility = View.VISIBLE
+        }
     }
 
     fun higherNeedsLevel(){
@@ -218,6 +273,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateLevel()
+        (applicationContext as App).needs = (object : LEVELNEEDS {
+            override fun needsinterface() {
+                updateLevel()
+            }
+        })
+        //updateLevel()
         if (!(applicationContext as App).isCreatingActivity && !(applicationContext as App).musicStart)
             (applicationContext as App).start1()
         (applicationContext as App).isCreatingActivity = false
@@ -287,9 +348,17 @@ class MainActivity : AppCompatActivity() {
             catSleep.seekTo(0)
             catSleep.pause()
         }
-        if(catPlay.isPlaying) {
-            catPlay.seekTo(0)
-            catPlay.pause()
+        if(catPlayFirst.isPlaying) {
+            catPlayFirst.seekTo(0)
+            catPlayFirst.pause()
+        }
+        if(catPlaySecond.isPlaying) {
+            catPlaySecond.seekTo(0)
+            catPlaySecond.pause()
+        }
+        if(catPlayThird.isPlaying) {
+            catPlayThird.seekTo(0)
+            catPlayThird.pause()
         }
     }
 
