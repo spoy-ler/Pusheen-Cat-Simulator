@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
         inAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_right)
         fromAnimation = AnimationUtils.loadAnimation(this, R.anim.translate_left)
 
-        Log.d("path123", this.getExternalFilesDir(null)!!.absolutePath)
-
 //        adapter = AdapterBar(0)
 //        val layoutManager = GridLayoutManager(this, 12)
 //        binding.listView.layoutManager = layoutManager
@@ -83,7 +81,6 @@ class MainActivity : AppCompatActivity() {
                 binding.nonActiveImg.setVisibility(View.VISIBLE)
                 binding.playButton.isEnabled = true
                 binding.sleepButton.isEnabled = true
-                //higherNeedsLevel()
             }
         }
         catSleep = MediaPlayer.create(this, R.raw.cat_sleep_2)
@@ -102,11 +99,9 @@ class MainActivity : AppCompatActivity() {
             higherNeedsLevel()
             binding.sleepButton.isEnabled = false
             binding.playButton.isEnabled = false
-            //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
             binding.nonActiveImg.visibility = View.INVISIBLE
-
             binding.catSleepActive.setVisibility(View.INVISIBLE)
             stopSound()
             val random = Random.nextInt(0, 3)
@@ -138,8 +133,6 @@ class MainActivity : AppCompatActivity() {
                     binding.onClickPlayThird.setVisibility(View.VISIBLE)
                     catPlayThird.start()
                 }
-
-
                 Timer.start()
 
             }
@@ -150,7 +143,6 @@ class MainActivity : AppCompatActivity() {
             higherNeedsLevel()
             binding.playButton.isEnabled = false
             binding.sleepButton.isEnabled = false
-            //Timer.cancel()
             binding.goToCat.clearAnimation()
             binding.goToCat.visibility = View.INVISIBLE
             binding.nonActiveImg.visibility = View.INVISIBLE
@@ -164,7 +156,6 @@ class MainActivity : AppCompatActivity() {
                 catSleep.start()
                 binding.catSleepActive.setVisibility(View.VISIBLE)
                 binding.onClickPlayFirst.setVisibility(View.INVISIBLE)
-                //binding.nonActiveImg.setVisibility(View.INVISIBLE)
                 Timer.start()
             }
         })
@@ -191,17 +182,7 @@ class MainActivity : AppCompatActivity() {
                 backToCat()
         }
 
-        /////////////////////////
-
-
-
-//        binding.normalCatBar.setOnClickListener{
-//            (applicationContext as App).levelValue = 9
-//        }
-        /////////////////////////
     }
-
-    /////////////////////////////
 
     fun updateLevel(){
         adapter = AdapterBar((applicationContext as App).levelValue)
@@ -253,8 +234,6 @@ class MainActivity : AppCompatActivity() {
 //            TimerBar.cancel()
     }
 
-    ////////////////////////////
-
     override fun  onPause() {
 
         super.onPause()
@@ -265,6 +244,13 @@ class MainActivity : AppCompatActivity() {
         binding.goToCat.visibility = View.INVISIBLE
         binding.backToCat.clearAnimation()
         binding.backToCat.visibility = View.INVISIBLE
+        stopSound()
+
+        binding.onClickPlayFirst.visibility = View.INVISIBLE
+        binding.onClickPlaySecond.visibility = View.INVISIBLE
+        binding.onClickPlayThird.visibility = View.INVISIBLE
+        binding.catSleepActive.visibility = View.INVISIBLE
+        binding.nonActiveImg.visibility = View.INVISIBLE
         //(applicationContext as App).writeFile()
     }
 
